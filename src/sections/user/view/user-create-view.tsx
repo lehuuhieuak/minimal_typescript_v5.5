@@ -26,7 +26,7 @@ export default function UserCreateView() {
             name: 'User',
             href: paths.dashboard.user.root,
           },
-          { name: 'New user' },
+          { name: 'New user ' },
         ]}
         sx={{
           mb: { xs: 3, md: 5 },

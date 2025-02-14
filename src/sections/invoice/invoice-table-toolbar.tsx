@@ -19,6 +19,9 @@ import CustomPopover, { usePopover } from 'src/components/custom-popover';
 
 // ----------------------------------------------------------------------
 
+//axios
+import axios, { endpoints, fetcher } from 'src/utils/axios';
+
 type Props = {
   filters: IInvoiceTableFilters;
   onFilters: (name: string, value: IInvoiceTableFilterValue) => void;
@@ -43,6 +46,28 @@ export default function InvoiceTableToolbar({
     [onFilters]
   );
 
+  // const handleFilterName = useCallback(
+  //   async  (event: React.ChangeEvent<HTMLInputElement>) => {
+  //     const sid = event.target.value;
+  //      // Kiểm tra nếu sid không rỗng
+  //   if (!sid) return;
+
+  //   try {
+  //     // Gọi API dựa trên sid
+  //     const response = await axios.get(`http://api.einvoice-cms.cbbank.vn/api/v1/EnvDatas?Sid=${sid}`);
+
+  //     // Kiểm tra dữ liệu trả về
+  //     console.log('Dữ liệu từ API:', response.data);
+
+  //     // Truyền dữ liệu vào hàm onFilters
+  //     onFilters('name', response.data.bname);
+  //   } catch (error) {
+  //     console.error('Lỗi khi gọi API:', error);
+  //   }
+  //   },
+  //   [onFilters]
+  // );
+  
   const handleFilterService = useCallback(
     (event: SelectChangeEvent<string[]>) => {
       onFilters(
@@ -81,7 +106,7 @@ export default function InvoiceTableToolbar({
           pr: { xs: 2.5, md: 1 },
         }}
       >
-        <FormControl
+        {/* <FormControl
           sx={{
             flexShrink: 0,
             width: { xs: 1, md: 180 },
@@ -104,9 +129,9 @@ export default function InvoiceTableToolbar({
               </MenuItem>
             ))}
           </Select>
-        </FormControl>
+        </FormControl> */}
 
-        <DatePicker
+        {/* <DatePicker
           label="Start date"
           value={filters.startDate}
           onChange={handleFilterStartDate}
@@ -129,7 +154,7 @@ export default function InvoiceTableToolbar({
           sx={{
             maxWidth: { md: 180 },
           }}
-        />
+        /> */}
 
         <Stack direction="row" alignItems="center" spacing={2} flexGrow={1} sx={{ width: 1 }}>
           <TextField
@@ -146,9 +171,9 @@ export default function InvoiceTableToolbar({
             }}
           />
 
-          <IconButton onClick={popover.onOpen}>
+          {/* <IconButton onClick={popover.onOpen}>
             <Iconify icon="eva:more-vertical-fill" />
-          </IconButton>
+          </IconButton> */}
         </Stack>
       </Stack>
 

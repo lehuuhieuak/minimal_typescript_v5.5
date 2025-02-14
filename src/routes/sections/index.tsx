@@ -10,6 +10,9 @@ import { authDemoRoutes } from './auth-demo';
 import { dashboardRoutes } from './dashboard';
 import { componentsRoutes } from './components';
 
+// Bat dau voi page Login
+import { PATH_AFTER_LOGIN } from 'src/config-global';
+
 // ----------------------------------------------------------------------
 
 export default function Router() {
@@ -27,7 +30,8 @@ export default function Router() {
       path: '/',
       element: (
         <MainLayout>
-          <HomePage />
+          <Navigate to={PATH_AFTER_LOGIN} replace />
+          {/* <HomePage/> */}
         </MainLayout>
       ),
     },

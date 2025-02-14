@@ -1,5 +1,8 @@
 import sumBy from 'lodash/sumBy';
-import { useState, useCallback } from 'react';
+import { useState, useCallback,useEffect } from 'react';
+//axios
+import axios, { endpoints, fetcher } from 'src/utils/axios';
+
 // @mui
 import { useTheme, alpha } from '@mui/material/styles';
 import Tab from '@mui/material/Tab';
@@ -42,7 +45,7 @@ import {
   TablePaginationCustom,
 } from 'src/components/table';
 // types
-import { IInvoice, IInvoiceTableFilters, IInvoiceTableFilterValue } from 'src/types/invoice';
+import { IInvData, IInvoice, IInvoiceTableFilters, IInvoiceTableFilterValue } from 'src/types/invoice';
 //
 import InvoiceAnalytic from '../invoice-analytic';
 import InvoiceTableRow from '../invoice-table-row';
@@ -51,13 +54,25 @@ import InvoiceTableFiltersResult from '../invoice-table-filters-result';
 
 // ----------------------------------------------------------------------
 
+// const TABLE_HEAD = [
+//   { id: 'invoiceNumber', label: 'Customer' },
+//   { id: 'createDate', label: 'Create' },
+//   { id: 'dueDate', label: 'Due' },
+//   { id: 'price', label: 'Amount' },
+//   { id: 'sent', label: 'Sent', align: 'center' },
+//   { id: 'status', label: 'Status' },
+//   { id: '' },
+// ];
+
 const TABLE_HEAD = [
-  { id: 'invoiceNumber', label: 'Customer' },
-  { id: 'createDate', label: 'Create' },
-  { id: 'dueDate', label: 'Due' },
-  { id: 'price', label: 'Amount' },
-  { id: 'sent', label: 'Sent', align: 'center' },
-  { id: 'status', label: 'Status' },
+  { id: 'sid', label: 'SID' },
+  { id: 'idt', label: 'IDT' },
+  { id: 'type', label: 'Type' },
+  { id: 'bcode', label: 'BCode' },
+  { id: 'bname', label: 'BName', align: 'center' },
+  { id: 'buyer', label: 'Buyet' },
+  { id: 'baddr', label: 'baddr' },
+  { id: 'btel', label: 'btel' },
   { id: '' },
 ];
 
@@ -81,6 +96,23 @@ export default function InvoiceListView() {
   const table = useTable({ defaultOrderBy: 'createDate' });
 
   const confirm = useBoolean();
+  
+  const URL = 'http://api.einvoice-cms.cbbank.vn/api/v1/EnvDatas';
+  const [Env_Data, setEnvData] = useState<IInvData[]>([]);
+
+  useEffect(() => {
+    const fetchEnvDatas = async () => {
+      try {
+        const response = await axios.get(URL);
+        setEnvData(response.data.data);      
+      }
+      catch{
+
+      }
+    }
+    fetchEnvDatas();
+  }, []);
+
 
   const [tableData, setTableData] = useState(_invoices);
 
@@ -92,7 +124,7 @@ export default function InvoiceListView() {
       : false;
 
   const dataFiltered = applyFilter({
-    inputData: tableData,
+    inputData: Env_Data,
     comparator: getComparator(table.order, table.orderBy),
     filters,
     dateError,
@@ -154,12 +186,24 @@ export default function InvoiceListView() {
   ] as const;
 
   const handleFilters = useCallback(
-    (name: string, value: IInvoiceTableFilterValue) => {
+    async (name: string, value: IInvoiceTableFilterValue) => {
       table.onResetPage();
       setFilters((prevState) => ({
         ...prevState,
         [name]: value,
       }));
+
+        try {
+      // Gọi API dựa trên sid
+      const response = await axios.get(`http://api.einvoice-cms.cbbank.vn/api/v1/EnvDatas?Sid=${value}`);
+
+      // Kiểm tra dữ liệu trả về
+      console.log('Dữ liệu từ API:', response.data);
+      setEnvData(response.data.data);
+
+    } catch (error) {
+      console.error('Lỗi khi gọi API:', error);
+    }
     },
     [table]
   );
@@ -228,22 +272,22 @@ export default function InvoiceListView() {
               name: 'List',
             },
           ]}
-          action={
-            <Button
-              component={RouterLink}
-              href={paths.dashboard.invoice.new}
-              variant="contained"
-              startIcon={<Iconify icon="mingcute:add-line" />}
-            >
-              New Invoice
-            </Button>
-          }
+          // action={
+          //   <Button
+          //     component={RouterLink}
+          //     href={paths.dashboard.invoice.new}
+          //     variant="contained"
+          //     startIcon={<Iconify icon="mingcute:add-line" />}
+          //   >
+          //     New Invoice
+          //   </Button>
+          // }
           sx={{
             mb: { xs: 3, md: 5 },
           }}
         />
 
-        <Card
+        {/* <Card
           sx={{
             mb: { xs: 3, md: 5 },
           }}
@@ -300,10 +344,10 @@ export default function InvoiceListView() {
               />
             </Stack>
           </Scrollbar>
-        </Card>
+        </Card> */}
 
         <Card>
-          <Tabs
+          {/* <Tabs
             value={filters.status}
             onChange={handleFilterStatus}
             sx={{
@@ -329,7 +373,7 @@ export default function InvoiceListView() {
                 }
               />
             ))}
-          </Tabs>
+          </Tabs> */}
 
           <InvoiceTableToolbar
             filters={filters}
@@ -339,7 +383,7 @@ export default function InvoiceListView() {
             serviceOptions={INVOICE_SERVICE_OPTIONS.map((option) => option.name)}
           />
 
-          {canReset && (
+          {/* {canReset && (
             <InvoiceTableFiltersResult
               filters={filters}
               onFilters={handleFilters}
@@ -349,10 +393,10 @@ export default function InvoiceListView() {
               results={dataFiltered.length}
               sx={{ p: 2.5, pt: 0 }}
             />
-          )}
+          )} */}
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            <TableSelectedAction
+            {/* <TableSelectedAction
               dense={table.dense}
               numSelected={table.selected.length}
               rowCount={tableData.length}
@@ -389,7 +433,7 @@ export default function InvoiceListView() {
                   </Tooltip>
                 </Stack>
               }
-            />
+            /> */}
 
             <Scrollbar>
               <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 800 }}>
@@ -400,12 +444,12 @@ export default function InvoiceListView() {
                   rowCount={tableData.length}
                   numSelected={table.selected.length}
                   onSort={table.onSort}
-                  onSelectAllRows={(checked) =>
-                    table.onSelectAllRows(
-                      checked,
-                      tableData.map((row) => row.id)
-                    )
-                  }
+                  // onSelectAllRows={(checked) =>
+                  //   table.onSelectAllRows(
+                  //     checked,
+                  //     tableData.map((row) => row.id)
+                  //   )
+                  // }
                 />
 
                 <TableBody>
@@ -414,15 +458,15 @@ export default function InvoiceListView() {
                       table.page * table.rowsPerPage,
                       table.page * table.rowsPerPage + table.rowsPerPage
                     )
-                    .map((row) => (
+                    .map((row, index) => (
                       <InvoiceTableRow
-                        key={row.id}
+                        key={index}
                         row={row}
-                        selected={table.selected.includes(row.id)}
-                        onSelectRow={() => table.onSelectRow(row.id)}
-                        onViewRow={() => handleViewRow(row.id)}
-                        onEditRow={() => handleEditRow(row.id)}
-                        onDeleteRow={() => handleDeleteRow(row.id)}
+                        selected={table.selected.includes(row.sid)}
+                        onSelectRow={() => table.onSelectRow(row.sid)}
+                        onViewRow={() => handleViewRow(row.sid)}
+                        onEditRow={() => handleEditRow(row.sid)}
+                        onDeleteRow={() => handleDeleteRow(row.sid)}
                       />
                     ))}
 
@@ -484,7 +528,7 @@ function applyFilter({
   filters,
   dateError,
 }: {
-  inputData: IInvoice[];
+  inputData: IInvData[];
   comparator: (a: any, b: any) => number;
   filters: IInvoiceTableFilters;
   dateError: boolean;
@@ -501,33 +545,33 @@ function applyFilter({
 
   inputData = stabilizedThis.map((el) => el[0]);
 
-  if (name) {
-    inputData = inputData.filter(
-      (invoice) =>
-        invoice.invoiceNumber.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
-        invoice.invoiceTo.name.toLowerCase().indexOf(name.toLowerCase()) !== -1
-    );
-  }
+  // if (name) {
+  //   inputData = inputData.filter(
+  //     (invoice) =>
+  //       invoice.invoiceNumber.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
+  //       invoice.invoiceTo.name.toLowerCase().indexOf(name.toLowerCase()) !== -1
+  //   );
+  // }
 
-  if (status !== 'all') {
-    inputData = inputData.filter((invoice) => invoice.status === status);
-  }
+  // if (status !== 'all') {
+  //   inputData = inputData.filter((invoice) => invoice.status === status);
+  // }
 
-  if (service.length) {
-    inputData = inputData.filter((invoice) =>
-      invoice.items.some((filterItem) => service.includes(filterItem.service))
-    );
-  }
+  // if (service.length) {
+  //   inputData = inputData.filter((invoice) =>
+  //     invoice.items.some((filterItem) => service.includes(filterItem.service))
+  //   );
+  // }
 
-  if (!dateError) {
-    if (startDate && endDate) {
-      inputData = inputData.filter(
-        (invoice) =>
-          fTimestamp(invoice.createDate) >= fTimestamp(startDate) &&
-          fTimestamp(invoice.createDate) <= fTimestamp(endDate)
-      );
-    }
-  }
+  // if (!dateError) {
+  //   if (startDate && endDate) {
+  //     inputData = inputData.filter(
+  //       (invoice) =>
+  //         fTimestamp(invoice.createDate) >= fTimestamp(startDate) &&
+  //         fTimestamp(invoice.createDate) <= fTimestamp(endDate)
+  //     );
+  //   }
+  // }
 
   return inputData;
 }

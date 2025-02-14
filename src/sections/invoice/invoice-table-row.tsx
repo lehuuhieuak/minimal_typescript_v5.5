@@ -16,7 +16,7 @@ import { useBoolean } from 'src/hooks/use-boolean';
 // utils
 import { fCurrency } from 'src/utils/format-number';
 // types
-import { IInvoice } from 'src/types/invoice';
+import { IInvData } from 'src/types/invoice';
 // components
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
@@ -26,7 +26,7 @@ import CustomPopover, { usePopover } from 'src/components/custom-popover';
 // ----------------------------------------------------------------------
 
 type Props = {
-  row: IInvoice;
+  row: IInvData;
   selected: boolean;
   onSelectRow: VoidFunction;
   onViewRow: VoidFunction;
@@ -42,7 +42,62 @@ export default function InvoiceTableRow({
   onEditRow,
   onDeleteRow,
 }: Props) {
-  const { sent, invoiceNumber, createDate, dueDate, status, invoiceTo, totalAmount } = row;
+  const {
+    sid,
+    idt,
+    type,
+    form,
+    serial,
+    seq,
+    bcode,
+    bname,
+    buyer,
+    btax,
+    baddr,
+    btel,
+    bmail,
+    paym,
+    curr,
+    exrt,
+    bacc,
+    bbank,
+    note,
+    sumv,
+    sum,
+    vatv,
+    vat,
+    word,
+    totalv,
+    total,
+    tradeamount,
+    discount,
+    aun,
+    sign,
+    type_ref,
+    listnum,
+    listdt,
+    sendtype,
+    items_line,
+    items_type,
+    items_vrt,
+    items_code,
+    items_name,
+    items_unit,
+    items_price,
+    items_quantity,
+    items_perdiscount,
+    items_amtdiscount,
+    items_amount,
+    items_vat,
+    items_total,
+    stax,
+    c0,
+    branchid,
+    tellerId,
+    seqNo,
+    time,
+    appSrc,
+  } = row;
 
   const confirm = useBoolean();
 
@@ -51,11 +106,93 @@ export default function InvoiceTableRow({
   return (
     <>
       <TableRow hover selected={selected}>
-        <TableCell padding="checkbox">
-          <Checkbox checked={selected} onClick={onSelectRow} />
+        <TableCell>
+          <ListItemText
+            disableTypography
+            primary={
+              <Typography variant="body2" noWrap>
+                {sid}
+              </Typography>
+            }
+          />
         </TableCell>
+        <TableCell>
+          <ListItemText
+            primary={format(new Date(idt), 'dd MMM yyyy')}
+            secondary={format(new Date(idt), 'p')}
+            primaryTypographyProps={{ typography: 'body2', noWrap: true }}
+            secondaryTypographyProps={{
+              mt: 0.5,
+              component: 'span',
+              typography: 'caption',
+            }}
+          />
+        </TableCell>
+        <TableCell >
+          <ListItemText
+            disableTypography
+            primary={
+              <Typography variant="body2" noWrap>
+                {type}
+              </Typography>
+            }
+          />
+        </TableCell>
+        <TableCell >
+          <ListItemText
+            disableTypography
+            primary={
+              <Typography variant="body2" noWrap>
+                {sid}
+              </Typography>
+            }
+          />
+        </TableCell>
+        <TableCell  >
+          <ListItemText
+            disableTypography
+            primary={
+              <Typography variant="body2" noWrap>
+                {bname}
+              </Typography>
+            }
+          />
+        </TableCell>
+        <TableCell  >
+          <ListItemText
+            disableTypography
+            primary={
+              <Typography variant="body2" noWrap>
+                {buyer}
+              </Typography>
+            }
+          />
+        </TableCell>
+        <TableCell  >
+          <ListItemText
+            disableTypography
+            primary={
+              <Typography variant="body2" noWrap>
+                {baddr}
+              </Typography>
+            }
+          />
+        </TableCell>
+        <TableCell  >
+          <ListItemText
+            disableTypography
+            primary={
+              <Typography variant="body2" noWrap>
+                {btel}
+              </Typography>
+            }
+          />
+        </TableCell>
+        {/* <TableCell padding="checkbox">
+          <Checkbox checked={selected} onClick={onSelectRow} />
+        </TableCell> */}
 
-        <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
+        {/* <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
           <Avatar alt={invoiceTo.name} sx={{ mr: 2 }}>
             {invoiceTo.name.charAt(0).toUpperCase()}
           </Avatar>
@@ -78,9 +215,10 @@ export default function InvoiceTableRow({
               </Link>
             }
           />
-        </TableCell>
+        </TableCell> */}
 
-        <TableCell>
+
+        {/* <TableCell>
           <ListItemText
             primary={format(new Date(createDate), 'dd MMM yyyy')}
             secondary={format(new Date(createDate), 'p')}
@@ -91,9 +229,9 @@ export default function InvoiceTableRow({
               typography: 'caption',
             }}
           />
-        </TableCell>
+        </TableCell> */}
 
-        <TableCell>
+        {/* <TableCell>
           <ListItemText
             primary={format(new Date(dueDate), 'dd MMM yyyy')}
             secondary={format(new Date(dueDate), 'p')}
@@ -104,13 +242,13 @@ export default function InvoiceTableRow({
               typography: 'caption',
             }}
           />
-        </TableCell>
+        </TableCell> */}
 
-        <TableCell>{fCurrency(totalAmount)}</TableCell>
+        {/* <TableCell>{fCurrency(totalAmount)}</TableCell>
 
-        <TableCell align="center">{sent}</TableCell>
+        <TableCell align="center">{sent}</TableCell> */}
 
-        <TableCell>
+        {/* <TableCell>
           <Label
             variant="soft"
             color={
@@ -128,7 +266,9 @@ export default function InvoiceTableRow({
           <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
             <Iconify icon="eva:more-vertical-fill" />
           </IconButton>
-        </TableCell>
+        </TableCell> */}
+
+        
       </TableRow>
 
       <CustomPopover

@@ -89,7 +89,7 @@ export default function Header() {
 
           <Stack alignItems="center" direction={{ xs: 'row', md: 'row-reverse' }}>
             <Button variant="contained" target="_blank" rel="noopener" href={paths.minimalUI}>
-              Purchase Now
+              Purchase Now 
             </Button>
 
             {mdUp && <LoginButton />}
